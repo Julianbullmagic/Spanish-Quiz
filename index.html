@@ -297,6 +297,7 @@
             sessionReviewWords = [...new Set([...priorWords, ...randomWords].map(w => w.es))];
 
             // 2. Build Base Array (Weighted)
+            // "The 20 new words are copied twice (so there are three times as many of them)"
             const newWordsTripled = [];
             newWords.forEach(w => {
                 newWordsTripled.push(w, w, w);
@@ -319,7 +320,28 @@
                 return;
             }
 
+            // 4. Shuffle Final Queue
             quizQueue = finalArray.sort(() => Math.random() - 0.5);
+
+            // 5. Add Intro Phase (New Words x 2)
+            // "The quiz should begin by going over the new words twice"
+            // We create a separate list of just the new words repeated twice, then push them to the END of the array
+            // (since we .pop() from the end to get the next card).
+            const introWords = [];
+            // Add first pass (in order)
+            introWords.push(...newWords);
+            // Add second pass (in order)
+            introWords.push(...newWords);
+            
+            // Since we pop() from the end, to show them first, we must put them at the END of the array.
+            // But we want them to appear in order 1..20, then 1..20.
+            // If we push [1,2,3], popping gives 3,2,1.
+            // So we need to reverse them before pushing if we want them in order.
+            introWords.reverse();
+
+            // Append intro words to the queue (which is the stack we pop from)
+            quizQueue.push(...introWords);
+
             totalItems = quizQueue.length;
             itemsDone = 0;
 
