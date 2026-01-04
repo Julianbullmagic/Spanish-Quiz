@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spanish Vocabulary Quiz</title>
+    <style>
+        :root {
+            --primary: #6200ee;
+            --primary-dark: #3700b3;
+            --surface: #ffffff;
+            --background: #f5f5f5;
+            --error: #b00020;
+            --success: #00c853;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--surface);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-bottom: 1rem;
+            touch-action: manipulation; /* Improves touch response */
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            margin-top: 1rem;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        .btn-outline:hover {
+            background-color: #f3e5f5;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Quiz Specific Styles */
+        .lang-indicator {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .word-display {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .feedback-stats {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            min-height: 1.2em;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .input-correct {
+            border-color: var(--success) !important;
+            background-color: #e8f5e9;
+            color: #00600f;
+        }
+
+        .input-incorrect {
+            border-color: var(--error) !important;
+            background-color: #ffebee;
+            color: var(--error);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #eee;
+            margin-top: 2rem;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .setup-screen {
+            animation: fadeIn 0.5s;
+        }
+
+        .quiz-screen {
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Setup Screen -->
+    <div id="setupScreen" class="container setup-screen">
+        <h1>Spanish Trainer</h1>
+        <p>Master the 1000 most common words.</p>
+        
+        <div class="input-group">
+            <label for="progressInput">How many words have you learned?</label>
+            <input type="number" id="progressInput" min="0" max="1000" placeholder="e.g., 50">
+        </div>
+
+        <button class="btn" onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quizScreen" class="container quiz-screen hidden">
+        <div class="lang-indicator" id="langIndicator"></div>
+        <div class="word-display" id="questionWord">Hola</div>
+        
+        <div class="input-group">
+            <input type="text" id="answerInput" placeholder="Type translation..." autocomplete="off">
+        </div>
+        
+        <button class="btn" onclick="checkAnswer()">Submit</button>
+
+        <div class="feedback-stats" id="statsDisplay"></div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <button class="btn btn-outline" onclick="copyAiPrompt()">
+            📋 Copy AI Practice Prompt
+        </button>
+    </div>
+
+    <script>
+        // Placeholder list - REPLACE THIS with your full 1000 word list
+        const fullWordList = [
+            { es: "el", en: "the" }, { es: "de", en: "of" }, { es: "que", en: "that" }, { es: "y", en: "and" },
+            { es: "a", en: "to" }, { es: "en", en: "in" }, { es: "un", en: "a" }, { es: "ser", en: "to be" },
+            { es: "se", en: "oneself" }, { es: "no", en: "no" }, { es: "haber", en: "to have" }, { es: "por", en: "by" },
+            { es: "con", en: "with" }, { es: "su", en: "his" }, { es: "para", en: "for" }, { es: "como", en: "like" },
+            { es: "estar", en: "to be" }, { es: "tener", en: "to have" }, { es: "le", en: "him" }, { es: "lo", en: "it" },
+            { es: "todo", en: "all" }, { es: "pero", en: "but" }, { es: "más", en: "more" }, { es: "hacer", en: "to do" },
+            { es: "o", en: "or" }, { es: "poder", en: "to be able" }, { es: "decir", en: "to say" }, { es: "este", en: "this" },
+            { es: "ir", en: "to go" }, { es: "otro", en: "other" }, { es: "ese", en: "that" }, { es: "la", en: "the" },
+            { es: "si", en: "if" }, { es: "me", en: "me" }, { es: "ya", en: "already" }, { es: "ver", en: "to see" },
+            { es: "porque", en: "because" }, { es: "dar", en: "to give" }, { es: "cuando", en: "when" }, { es: "él", en: "he" },
+            { es: "muy", en: "very" }, { es: "sin", en: "without" }, { es: "vez", en: "time" }, { es: "mucho", en: "much" },
+            { es: "saber", en: "to know" }, { es: "qué", en: "what" }, { es: "sobre", en: "about" }, { es: "mi", en: "my" },
+            { es: "alguno", en: "some" }, { es: "mismo", en: "same" }, { es: "yo", en: "I" }, { es: "también", en: "also" },
+            { es: "hasta", en: "until" }, { es: "año", en: "year" }, { es: "dos", en: "two" }, { es: "querer", en: "to want" },
+            { es: "entre", en: "between" }, { es: "así", en: "so" }, { es: "primero", en: "first" }, { es: "desde", en: "from" },
+            { es: "grande", en: "large" }, { es: "eso", en: "that" }, { es: "ni", en: "neither" }, { es: "nos", en: "us" },
+            { es: "llegar", en: "to arrive" }, { es: "pasar", en: "to pass" }, { es: "tiempo", en: "time" }, { es: "ella", en: "she" },
+            { es: "sí", en: "yes" }, { es: "día", en: "day" }, { es: "uno", en: "one" }, { es: "bien", en: "well" },
+            { es: "poco", en: "little" }, { es: "deber", en: "should" }, { es: "entonces", en: "then" }, { es: "poner", en: "to put" },
+            { es: "cosa", en: "thing" }, { es: "tanto", en: "so much" }, { es: "hombre", en: "man" }, { es: "parecer", en: "to seem" },
+            { es: "nuestro", en: "our" }, { es: "tan", en: "so" }, { es: "donde", en: "where" }, { es: "ahora", en: "now" },
+            { es: "parte", en: "part" }, { es: "después", en: "after" }, { es: "vida", en: "life" }, { es: "quedar", en: "to remain" },
+            { es: "siempre", en: "always" }, { es: "creer", en: "to believe" }, { es: "hablar", en: "to speak" }, { es: "llevar", en: "to carry" },
+            { es: "dejar", en: "to leave" }, { es: "nada", en: "nothing" }, { es: "cada", en: "each" }, { es: "seguir", en: "to follow" },
+            { es: "menos", en: "less" }, { es: "nuevo", en: "new" }, { es: "encontrar", en: "to find" }, { es: "algo", en: "something" }
+        ];
+
+        // State
+        let quizQueue = [];
+        let currentCard = null;
+        let correctCounts = {};
+        let totalItems = 0;
+        let itemsDone = 0;
+        let isProcessing = false;
+        
+        // Session Data for Export
+        let sessionNewWords = [];
+        let sessionReviewWords = [];
+
+        // Elements
+        const setupScreen = document.getElementById('setupScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const progressInput = document.getElementById('progressInput');
+        const questionWordEl = document.getElementById('questionWord');
+        const answerInput = document.getElementById('answerInput');
+        const statsDisplay = document.getElementById('statsDisplay');
+        const progressBar = document.getElementById('progressBar');
+        const langIndicator = document.getElementById('langIndicator');
+
+        // Logic
+        function startQuiz() {
+            const learnedCount = parseInt(progressInput.value) || 0;
+            
+            // 1. Identify segments
+            const startPrior = Math.max(0, learnedCount - 40);
+            const priorWords = fullWordList.slice(startPrior, learnedCount);
+            const newWords = fullWordList.slice(learnedCount, learnedCount + 20);
+
+            let randomWords = [];
+            if (startPrior > 0) {
+                const pool = fullWordList.slice(0, startPrior);
+                pool.sort(() => Math.random() - 0.5);
+                randomWords = pool.slice(0, 40);
+            }
+
+            // Store for AI Prompt (Unique Spanish words)
+            sessionNewWords = newWords.map(w => w.es);
+            sessionReviewWords = [...new Set([...priorWords, ...randomWords].map(w => w.es))];
+
+            // 2. Build Base Array (Weighted)
+            const newWordsTripled = [];
+            newWords.forEach(w => {
+                newWordsTripled.push(w, w, w);
+            });
+
+            const baseSet = [
+                ...priorWords,
+                ...newWordsTripled,
+                ...randomWords
+            ];
+
+            // 3. Replicate 10 times
+            let finalArray = [];
+            for (let i = 0; i < 10; i++) {
+                finalArray = finalArray.concat(baseSet);
+            }
+
+            if (finalArray.length === 0) {
+                alert("Please increase the number of learned words or check the word list.");
+                return;
+            }
+
+            quizQueue = finalArray.sort(() => Math.random() - 0.5);
+            totalItems = quizQueue.length;
+            itemsDone = 0;
+
+            // Reset stats for new words
+            newWords.forEach(w => {
+                if (!correctCounts[w.es]) correctCounts[w.es] = 0;
+            });
+
+            setupScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            
+            nextCard();
+        }
+
+        function nextCard() {
+            if (quizQueue.length === 0) {
+                alert("Quiz Complete! Great job.");
+                location.reload();
+                return;
+            }
+
+            isProcessing = false;
+            const wordObj = quizQueue.pop();
+            itemsDone++;
+            updateProgress();
+
+            const mode = Math.random() < 0.5 ? 'toEN' : 'toES';
+            
+            currentCard = {
+                wordObj: wordObj,
+                mode: mode,
+                question: mode === 'toEN' ? wordObj.es : wordObj.en,
+                answer: mode === 'toEN' ? wordObj.en : wordObj.es
+            };
+
+            // Update UI
+            questionWordEl.textContent = currentCard.question;
+            langIndicator.textContent = mode === 'toEN' ? "Spanish → English" : "English → Spanish";
+            
+            answerInput.value = "";
+            answerInput.className = "";
+            answerInput.focus();
+            statsDisplay.textContent = "";
+        }
+
+        function checkAnswer() {
+            if (isProcessing) return;
+
+            const userVal = answerInput.value.trim().toLowerCase();
+            const correctVal = currentCard.answer.toLowerCase();
+            
+            isProcessing = true;
+
+            if (userVal === correctVal) {
+                // Correct
+                answerInput.classList.add('input-correct');
+                
+                if (correctCounts.hasOwnProperty(currentCard.wordObj.es)) {
+                    correctCounts[currentCard.wordObj.es]++;
+                    statsDisplay.textContent = `Correct! You've mastered "${currentCard.wordObj.es}" ${correctCounts[currentCard.wordObj.es]} times.`;
+                } else {
+                    statsDisplay.textContent = "Correct!";
+                }
+
+                setTimeout(() => {
+                    nextCard();
+                }, 1000);
+
+            } else {
+                // Incorrect
+                answerInput.classList.add('input-incorrect');
+                statsDisplay.style.color = "var(--error)";
+                statsDisplay.textContent = `Incorrect. The answer was "${currentCard.answer}".`;
+
+                setTimeout(() => {
+                    statsDisplay.style.color = ""; // Reset color
+                    nextCard();
+                }, 2000);
+            }
+        }
+
+        function updateProgress() {
+            const pct = (itemsDone / totalItems) * 100;
+            progressBar.style.width = pct + "%";
+        }
+
+        function copyAiPrompt() {
+            if (sessionNewWords.length === 0 && sessionReviewWords.length === 0) {
+                alert("Start the quiz first to generate a prompt.");
+                return;
+            }
+
+            const promptText = `I would like you to help me practice Spanish by having a conversation with me using only these Spanish words. Please try to use the newly added words (listed first) more frequently than the rest in order to help me remember them.
+
+NEW WORDS (Prioritize these):
+${sessionNewWords.join(', ')}
+
+REVIEW WORDS:
+${sessionReviewWords.join(', ')}`;
+
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btn = document.querySelector('.btn-outline');
+                const originalText = btn.textContent;
+                btn.textContent = "✅ Copied to Clipboard!";
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert("Failed to copy to clipboard. Please allow clipboard permissions.");
+            });
+        }
+
+        // Event Listeners
+        answerInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+    </script>
+</body>
+</html>
