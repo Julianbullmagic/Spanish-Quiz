@@ -254,6 +254,72 @@
             { es: "menos", en: "less" }, { es: "nuevo", en: "new" }, { es: "encontrar", en: "to find" }, { es: "algo", en: "something" }
         ];
 
+        const grammarBank = [
+          {
+            id: 'g_gender_el',
+            type: 'grammar',
+            promptEs: 'Article + noun: ___ problema (choose el/la)',
+            acceptable: ['el'],
+            topic: 'Gender'
+          },
+          {
+            id: 'g_gender_la',
+            type: 'grammar',
+            promptEs: 'Article + noun: ___ casa (choose el/la)',
+            acceptable: ['la'],
+            topic: 'Gender'
+          },
+          {
+            id: 'g_plural_s',
+            type: 'grammar',
+            promptEs: 'Make plural: "gato" ->',
+            acceptable: ['gatos'],
+            topic: 'Pluralization'
+          },
+          {
+            id: 'g_subj_pron',
+            type: 'grammar',
+            promptEs: 'Translate "We" (masculine) ->',
+            acceptable: ['nosotros'],
+            topic: 'Pronouns'
+          },
+          {
+            id: 'g_ser_estar',
+            type: 'grammar',
+            promptEs: 'Complete: "Yo ___ feliz" (I am happy right now) ->',
+            acceptable: ['estoy'],
+            topic: 'Ser vs Estar'
+          },
+          {
+            id: 'g_pres_ar',
+            type: 'grammar',
+            promptEs: 'Conjugate: hablar (yo, presente) ->',
+            acceptable: ['hablo'],
+            topic: 'Present Tense'
+          },
+          {
+            id: 'g_subj_nos',
+            type: 'grammar',
+            promptEs: 'Conjugate: hablar (nosotros, presente subjuntivo)',
+            acceptable: ['hablemos'],
+            topic: 'Subjunctive'
+          },
+          {
+            id: 'g_pret_irreg',
+            type: 'grammar',
+            promptEs: 'Preterite of “tener” (ellos)',
+            acceptable: ['tuvieron'],
+            topic: 'Preterite irregulars'
+          },
+          {
+            id: 'g_clitic',
+            type: 'grammar',
+            promptEs: 'Order the words: “dáselo” → me, los',
+            acceptable: ['dámelos', 'dámelos.'],
+            topic: 'Clitic doubling'
+          }
+        ];
+
         // State
         let quizQueue = [];
         let currentCard = null;
@@ -323,6 +389,26 @@
             // 4. Shuffle Final Queue
             quizQueue = finalArray.sort(() => Math.random() - 0.5);
 
+            // 4b. Mix in Grammar (Easy -> Hard maps to End -> Start of array)
+            // We want 'Easy' (index 0) to be popped earlier (End of array).
+            // We want 'Hard' (index N) to be popped later (Start of array).
+            const segmentSize = Math.floor(quizQueue.length / (grammarBank.length || 1));
+            
+            grammarBank.forEach((gItem, index) => {
+                // Calculate target bucket: 
+                // index 0 (Easy) -> Last bucket
+                // index N (Hard) -> First bucket
+                const bucketIndex = (grammarBank.length - 1) - index;
+                
+                // Random position within that bucket
+                let pos = (bucketIndex * segmentSize) + Math.floor(Math.random() * segmentSize);
+                
+                // Clamp to bounds
+                pos = Math.max(0, Math.min(pos, quizQueue.length));
+                
+                quizQueue.splice(pos, 0, gItem);
+            });
+
             // 5. Add Intro Phase (New Words x 2)
             // "The quiz should begin by going over the new words twice"
             // We create a separate list of just the new words repeated twice, then push them to the END of the array
@@ -368,18 +454,30 @@
             itemsDone++;
             updateProgress();
 
-            const mode = Math.random() < 0.5 ? 'toEN' : 'toES';
-            
-            currentCard = {
-                wordObj: wordObj,
-                mode: mode,
-                question: mode === 'toEN' ? wordObj.es : wordObj.en,
-                answer: mode === 'toEN' ? wordObj.en : wordObj.es
-            };
+            if (wordObj.type === 'grammar') {
+                currentCard = {
+                    wordObj: wordObj,
+                    mode: 'grammar',
+                    question: wordObj.promptEs,
+                    answer: wordObj.acceptable[0],
+                    acceptable: wordObj.acceptable
+                };
+                questionWordEl.textContent = currentCard.question;
+                langIndicator.textContent = `Grammar: ${wordObj.topic}`;
+            } else {
+                const mode = Math.random() < 0.5 ? 'toEN' : 'toES';
+                
+                currentCard = {
+                    wordObj: wordObj,
+                    mode: mode,
+                    question: mode === 'toEN' ? wordObj.es : wordObj.en,
+                    answer: mode === 'toEN' ? wordObj.en : wordObj.es,
+                    acceptable: [mode === 'toEN' ? wordObj.en : wordObj.es]
+                };
 
-            // Update UI
-            questionWordEl.textContent = currentCard.question;
-            langIndicator.textContent = mode === 'toEN' ? "Spanish → English" : "English → Spanish";
+                questionWordEl.textContent = currentCard.question;
+                langIndicator.textContent = mode === 'toEN' ? "Spanish → English" : "English → Spanish";
+            }
             
             answerInput.value = "";
             answerInput.className = "";
@@ -391,15 +489,16 @@
             if (isProcessing) return;
 
             const userVal = answerInput.value.trim().toLowerCase();
-            const correctVal = currentCard.answer.toLowerCase();
+            // Check if any acceptable answer matches
+            const isCorrect = currentCard.acceptable.some(a => a.toLowerCase() === userVal);
             
             isProcessing = true;
 
-            if (userVal === correctVal) {
+            if (isCorrect) {
                 // Correct
                 answerInput.classList.add('input-correct');
                 
-                if (correctCounts.hasOwnProperty(currentCard.wordObj.es)) {
+                if (currentCard.wordObj.es && correctCounts.hasOwnProperty(currentCard.wordObj.es)) {
                     correctCounts[currentCard.wordObj.es]++;
                     statsDisplay.textContent = `Correct! You've mastered "${currentCard.wordObj.es}" ${correctCounts[currentCard.wordObj.es]} times.`;
                 } else {
