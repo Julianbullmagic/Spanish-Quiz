@@ -226,33 +226,153 @@
 
     <script>
         // Placeholder list - REPLACE THIS with your full 1000 word list
-        const fullWordList = [
-            { es: "el", en: "the" }, { es: "de", en: "of" }, { es: "que", en: "that" }, { es: "y", en: "and" },
-            { es: "a", en: "to" }, { es: "en", en: "in" }, { es: "un", en: "a" }, { es: "ser", en: "to be" },
-            { es: "se", en: "oneself" }, { es: "no", en: "no" }, { es: "haber", en: "to have" }, { es: "por", en: "by" },
-            { es: "con", en: "with" }, { es: "su", en: "his" }, { es: "para", en: "for" }, { es: "como", en: "like" },
-            { es: "estar", en: "to be" }, { es: "tener", en: "to have" }, { es: "le", en: "him" }, { es: "lo", en: "it" },
-            { es: "todo", en: "all" }, { es: "pero", en: "but" }, { es: "más", en: "more" }, { es: "hacer", en: "to do" },
-            { es: "o", en: "or" }, { es: "poder", en: "to be able" }, { es: "decir", en: "to say" }, { es: "este", en: "this" },
-            { es: "ir", en: "to go" }, { es: "otro", en: "other" }, { es: "ese", en: "that" }, { es: "la", en: "the" },
-            { es: "si", en: "if" }, { es: "me", en: "me" }, { es: "ya", en: "already" }, { es: "ver", en: "to see" },
-            { es: "porque", en: "because" }, { es: "dar", en: "to give" }, { es: "cuando", en: "when" }, { es: "él", en: "he" },
-            { es: "muy", en: "very" }, { es: "sin", en: "without" }, { es: "vez", en: "time" }, { es: "mucho", en: "much" },
-            { es: "saber", en: "to know" }, { es: "qué", en: "what" }, { es: "sobre", en: "about" }, { es: "mi", en: "my" },
-            { es: "alguno", en: "some" }, { es: "mismo", en: "same" }, { es: "yo", en: "I" }, { es: "también", en: "also" },
-            { es: "hasta", en: "until" }, { es: "año", en: "year" }, { es: "dos", en: "two" }, { es: "querer", en: "to want" },
-            { es: "entre", en: "between" }, { es: "así", en: "so" }, { es: "primero", en: "first" }, { es: "desde", en: "from" },
-            { es: "grande", en: "large" }, { es: "eso", en: "that" }, { es: "ni", en: "neither" }, { es: "nos", en: "us" },
-            { es: "llegar", en: "to arrive" }, { es: "pasar", en: "to pass" }, { es: "tiempo", en: "time" }, { es: "ella", en: "she" },
-            { es: "sí", en: "yes" }, { es: "día", en: "day" }, { es: "uno", en: "one" }, { es: "bien", en: "well" },
-            { es: "poco", en: "little" }, { es: "deber", en: "should" }, { es: "entonces", en: "then" }, { es: "poner", en: "to put" },
-            { es: "cosa", en: "thing" }, { es: "tanto", en: "so much" }, { es: "hombre", en: "man" }, { es: "parecer", en: "to seem" },
-            { es: "nuestro", en: "our" }, { es: "tan", en: "so" }, { es: "donde", en: "where" }, { es: "ahora", en: "now" },
-            { es: "parte", en: "part" }, { es: "después", en: "after" }, { es: "vida", en: "life" }, { es: "quedar", en: "to remain" },
-            { es: "siempre", en: "always" }, { es: "creer", en: "to believe" }, { es: "hablar", en: "to speak" }, { es: "llevar", en: "to carry" },
-            { es: "dejar", en: "to leave" }, { es: "nada", en: "nothing" }, { es: "cada", en: "each" }, { es: "seguir", en: "to follow" },
-            { es: "menos", en: "less" }, { es: "nuevo", en: "new" }, { es: "encontrar", en: "to find" }, { es: "algo", en: "something" }
-        ];
+       const fullWordList = [
+  // === 1. ARTICLES, PRONOUNS & DETERMINERS (1-120) ===
+  {"el": "the (masculine singular)"}, {"la": "the (feminine singular)"}, {"los": "the (masculine plural)"}, {"las": "the (feminine plural)"},
+  {"un": "a/an (masculine)"}, {"una": "a/an (feminine)"}, {"unos": "some (masc. pl.)"}, {"unas": "some (fem. pl.)"},
+  {"este": "this (masc.)"}, {"esta": "this (fem.)"}, {"estos": "these (masc.)"}, {"estas": "these (fem.)"},
+  {"ese": "that (masc.)"}, {"esa": "that (fem.)"}, {"esos": "those (masc.)"}, {"esas": "those (fem.)"},
+  {"aquel": "that (over there, masc.)"}, {"aquella": "that (over there, fem.)"}, {"aquellos": "those (over there, masc.)"}, {"aquellas": "those (over there, fem.)"},
+  {"mi": "my"}, {"tu": "your (informal)"}, {"su": "his/her/your/their"}, {"nuestro": "our (masc.)"}, {"nuestra": "our (fem.)"},
+  {"vuestro": "your (pl., Spain, masc.)"}, {"vuestra": "your (pl., Spain, fem.)"}, {"cuyo": "whose (masc.)"}, {"cuya": "whose (fem.)"},
+  {"algún": "some/any"}, {"alguna": "some/any (fem.)"}, {"ningún": "no/not any"}, {"ninguna": "no/not any (fem.)"},
+  {"todo": "all/every (masc.)"}, {"toda": "all/every (fem.)"}, {"cada": "each"}, {"varios": "several (masc.)"}, {"varias": "several (fem.)"},
+  {"mucho": "much/many (masc.)"}, {"mucha": "much/many (fem.)"}, {"poco": "little/few (masc.)"}, {"poca": "little/few (fem.)"},
+  {"otro": "other/another (masc.)"}, {"otra": "other/another (fem.)"}, {"mismo": "same (masc.)"}, {"misma": "same (fem.)"},
+  {"yo": "I"}, {"tú": "you (inf.)"}, {"él": "he"}, {"ella": "she"}, {"usted": "you (formal)"}, {"ello": "it"},
+  {"nosotros": "we (masc.)"}, {"nosotras": "we (fem.)"}, {"vosotros": "you (pl., Spain, masc.)"}, {"vosotras": "you (pl., Spain, fem.)"},
+  {"ellos": "they (masc.)"}, {"ellas": "they (fem.)"}, {"ustedes": "you (pl., formal/LatAm)"},
+  {"me": "me (direct/indirect)"}, {"te": "you (direct/indirect, inf.)"}, {"lo": "him/it (direct, masc.)"}, {"la": "her/it (direct, fem.)"},
+  {"le": "him/her/you (indirect)"}, {"se": "oneself (reflexive)"}, {"nos": "us"}, {"os": "you (pl., indirect, Spain)"}, {"les": "them/you (pl., indirect)"},
+  {"esto": "this (neutral)"}, {"eso": "that (neutral)"}, {"aquello": "that (over there, neutral)"},
+  {"algo": "something"}, {"nada": "nothing"}, {"alguien": "someone"}, {"nadie": "no one"}, {"cualquier": "any"}, {"quien": "who"},
+  {"qué": "what"}, {"cuál": "which"}, {"quién": "who"}, {"cuánto": "how much"}, {"cómo": "how"}, {"dónde": "where"}, {"cuándo": "when"},
+  {"por qué": "why"}, {"cuántos": "how many (masc.)"}, {"cuántas": "how many (fem.)"},
+  {"cualquiera": "anyone/any"}, {"nadie": "nobody"}, {"todo el mundo": "everyone"},
+
+  // === 2. PREPOSITIONS & CONJUNCTIONS (121-170) ===
+  {"de": "of/from"}, {"a": "to/at"}, {"en": "in/on/at"}, {"con": "with"}, {"por": "for/by/through"},
+  {"para": "for/to"}, {"sin": "without"}, {"sobre": "on/about"}, {"entre": "between/among"}, {"hacia": "towards"},
+  {"hasta": "until/up to"}, {"desde": "from/since"}, {"durante": "during"}, {"mediante": "by means of"}, {"según": "according to"},
+  {"ante": "before/in front of"}, {"bajo": "under"}, {"contra": "against"}, {"excepto": "except"}, {"incluso": "even"},
+  {"salvo": "except"}, {"versus": "versus"}, {"vía": "via"},
+  {"y": "and"}, {"o": "or"}, {"pero": "but"}, {"porque": "because"}, {"si": "if"}, {"como": "as/like"},
+  {"cuando": "when"}, {"aunque": "although"}, {"mientras": "while"}, {"sino": "but (rather)"},
+  {"pues": "well/then"}, {"entonces": "so/then"}, {"además": "furthermore"}, {"también": "also"}, {"así": "thus/like this"},
+  {"sin embargo": "however"}, {"por lo tanto": "therefore"}, {"no obstante": "nevertheless"}, {"es decir": "that is"},
+
+  // === 3. ESSENTIAL VERBS (INFINITIVES) (171-400) ===
+  // Core Existence & Possession
+  {"ser": "to be (permanent)"}, {"estar": "to be (temporary/location)"}, {"tener": "to have"}, {"haber": "to have (auxiliary)"},
+  // Core Actions & Motion
+  {"hacer": "to do/make"}, {"ir": "to go"}, {"venir": "to come"}, {"poder": "to be able to"}, {"saber": "to know (information)"},
+  {"querer": "to want/love"}, {"decir": "to say/tell"}, {"ver": "to see"}, {"dar": "to give"}, {"llegar": "to arrive"},
+  {"pasar": "to pass/happen"}, {"deber": "should/must"}, {"poner": "to put"}, {"parecer": "to seem"}, {"quedar": "to stay/remain"},
+  // Communication & Thought
+  {"creer": "to believe"}, {"hablar": "to speak"}, {"pensar": "to think"}, {"contar": "to count/tell"}, {"llamar": "to call"},
+  {"preguntar": "to ask"}, {"explicar": "to explain"}, {"entender": "to understand"}, {"responder": "to answer"}, {"llorar": "to cry"},
+  {"reír": "to laugh"}, {"gritar": "to shout"}, {"susurrar": "to whisper"}, {"escribir": "to write"}, {"leer": "to read"},
+  {"oir": "to hear"}, {"escuchar": "to listen"}, {"significar": "to mean"}, {"prometer": "to promise"},
+  // Daily Actions & Interaction
+  {"encontrar": "to find"}, {"buscar": "to look for"}, {"tomar": "to take/drink"}, {"llevar": "to carry/wear"}, {"traer": "to bring"},
+  {"comprar": "to buy"}, {"vender": "to sell"}, {"pagar": "to pay"}, {"gastar": "to spend"}, {"usar": "to use"}, {"utilizar": "to use"},
+  {"abrir": "to open"}, {"cerrar": "to close"}, {"empezar": "to begin"}, {"comenzar": "to begin"}, {"terminar": "to finish"},
+  {"acabar": "to finish"}, {"seguir": "to follow/continue"}, {"dejar": "to let/leave"}, {"esperar": "to wait/hope"}, {"intentar": "to try"},
+  {"necesitar": "to need"}, {"ayudar": "to help"}, {"dar": "to give"}, {"recibir": "to receive"}, {"permitir": "to allow"},
+  {"prohibir": "to forbid"}, {"recordar": "to remember"}, {"olvidar": "to forget"},
+  // Work & Study
+  {"trabajar": "to work"}, {"estudiar": "to study"}, {"aprender": "to learn"}, {"enseñar": "to teach"}, {"lograr": "to achieve"},
+  {"ganar": "to win/earn"}, {"perder": "to lose"}, {"cambiar": "to change"}, {"crear": "to create"}, {"construir": "to build"},
+  {"decidir": "to decide"}, {"elegir": "to choose"}, {"preferir": "to prefer"},
+  // Movement & Travel
+  {"salir": "to leave/go out"}, {"entrar": "to enter"}, {"volver": "to return"}, {"partir": "to leave/split"}, {"viajar": "to travel"},
+  {"andar": "to walk"}, {"correr": "to run"}, {"saltar": "to jump"}, {"parar": "to stop"}, {"subir": "to go up/get on"},
+  {"bajar": "to go down/get off"}, {"llegar": "to arrive"}, {"conducir": "to drive"}, {"volar": "to fly"}, {"nadar": "to swim"},
+  // Life & Sensations
+  {"vivir": "to live"}, {"nacer": "to be born"}, {"morir": "to die"}, {"amar": "to love"}, {"odiar": "to hate"},
+  {"sentir": "to feel"}, {"sufrir": "to suffer"}, {"disfrutar": "to enjoy"}, {"sonreír": "to smile"}, {"besar": "to kiss"},
+  {"abrazar": "to hug"}, {"mirar": "to look at"}, {"ver": "to see"}, {"observar": "to observe"}, {"tocar": "to touch/play"},
+  {"oler": " to smell"}, {"gustar": "to be pleasing (to like)"}, {"encantar": "to love (something)"}, {"doler": "to hurt"},
+  {"dormir": "to sleep"}, {"despertar": "to wake up"}, {"descansar": "to rest"},
+  // More Essential Actions
+  {"jugar": "to play"}, {"comer": "to eat"}, {"beber": "to drink"}, {"cocinar": "to cook"}, {"lavar": "to wash"},
+  {"limpiar": "to clean"}, {"comprar": "to buy"}, {"vender": "to sell"}, {"cortar": "to cut"}, {"pegar": "to stick/hit"},
+  {"romper": "to break"}, {"arreglar": "to fix"}, {"guardar": "to keep/put away"}, {"encontrar": "to find"}, {"perder": "to lose"},
+
+  // === 4. ESSENTIAL NOUNS (401-1000) ===
+  // Time
+  {"tiempo": "time/weather"}, {"año": "year"}, {"mes": "month"}, {"semana": "week"}, {"día": "day"}, {"hoy": "today"},
+  {"mañana": "tomorrow/morning"}, {"tarde": "afternoon/late"}, {"noche": "night"}, {"hora": "hour"}, {"minuto": "minute"},
+  {"segundo": "second"}, {"pasado": "past"}, {"presente": "present"}, {"futuro": "future"}, {"edad": "age"}, {"vez": "time (occasion)"},
+  {"momento": "moment"}, {"época": "era/season"}, {"siglo": "century"},
+  // People & Family
+  {"persona": "person"}, {"gente": "people"}, {"hombre": "man"}, {"mujer": "woman"}, {"niño": "boy/child"}, {"niña": "girl"},
+  {"hijo": "son"}, {"hija": "daughter"}, {"padre": "father"}, {"madre": "mother"}, {"padres": "parents"}, {"hermano": "brother"},
+  {"hermana": "sister"}, {"familia": "family"}, {"amigo": "friend (masc.)"}, {"amiga": "friend (fem.)"}, {"nombre": "name"},
+  {"señor": "Mr./gentleman"}, {"señora": "Mrs./lady"}, {"señorita": "Miss"},
+  // Body Parts
+  {"cabeza": "head"}, {"cara": "face"}, {"ojo": "eye"}, {"nariz": "nose"}, {"boca": "mouth"}, {"oído": "inner ear"},
+  {"oreja": "outer ear"}, {"pelo": "hair"}, {"brazo": "arm"}, {"mano": "hand"}, {"dedo": "finger"}, {"pierna": "leg"},
+  {"pie": "foot"}, {"corazón": "heart"}, {"cuerpo": "body"}, {"salud": "health"},
+  // Home & Objects
+  {"casa": "house/home"}, {"hogar": "home"}, {"habitación": "room"}, {"puerta": "door"}, {"ventana": "window"}, {"mesa": "table"},
+  {"silla": "chair"}, {"cama": "bed"}, {"baño": "bathroom"}, {"cocina": "kitchen"}, {"comida": "food/meal"},
+  {"agua": "water"}, {"pan": "bread"}, {"leche": "milk"}, {"dinero": "money"}, {"cosa": "thing"}, {"objeto": "object"},
+  {"libro": "book"}, {"papel": "paper"}, {"bolígrafo": "pen"}, {"lápiz": "pencil"}, {"cuaderno": "notebook"},
+  // City & Transport
+  {"ciudad": "city"}, {"pueblo": "town"}, {"calle": "street"}, {"carretera": "road/highway"}, {"plaza": "square"},
+  {"parque": "park"}, {"tienda": "shop"}, {"hospital": "hospital"}, {"escuela": "school"}, {"universidad": "university"},
+  {"trabajo": "work/job"}, {"coche": "car"}, {"auto": "car (LatAm)"}, {"autobús": "bus"}, {"tren": "train"},
+  {"avión": "airplane"}, {"billete": "ticket"}, {"equipaje": "luggage"},
+  // Nature
+  {"mundo": "world"}, {"país": "country"}, {"naturaleza": "nature"}, {"campo": "countryside"}, {"cielo": "sky/heaven"},
+  {"sol": "sun"}, {"luna": "moon"}, {"estrella": "star"}, {"aire": "air"}, {"tierra": "earth/land"}, {"mar": "sea"},
+  {"río": "river"}, {"montaña": "mountain"}, {"árbol": "tree"}, {"flor": "flower"}, {"animal": "animal"},
+  {"perro": "dog"}, {"gato": "cat"},
+  // Abstract Concepts
+  {"vida": "life"}, {"amor": "love"}, {"verdad": "truth"}, {"mentira": "lie"}, {"razón": "reason"},
+  {"pregunta": "question"}, {"respuesta": "answer"}, {"idea": "idea"}, {"pensamiento": "thought"}, {"problema": "problem"},
+  {"solución": "solution"}, {"cambio": "change"}, {"derecho": "right/law"}, {"libertad": "freedom"}, {"justicia": "justice"},
+  {"paz": "peace"}, {"guerra": "war"}, {"fuerza": "force/strength"}, {"poder": "power"}, {"manera": "way/manner"},
+  {"parte": "part"}, {"tipo": "type/kind"}, {"ejemplo": "example"}, {"sentido": "sense/meaning"}, {"realidad": "reality"},
+  {"hecho": "fact"}, {"caso": "case"}, {"serie": "series"}, {"grupo": "group"}, {"sistema": "system"},
+
+  // === 5. KEY ADJECTIVES & ADVERBS (1001-1500) ===
+  // Quantity & Quality
+  {"gran": "great/big (before noun)"}, {"grande": "big/large"}, {"pequeño": "small"}, {"alto": "tall/high"}, {"bajo": "short/low"},
+  {"largo": "long"}, {"corto": "short"}, {"ancho": "wide"}, {"estrecho": "narrow"}, {"bueno": "good"}, {"malo": "bad"},
+  {"mejor": "better"}, {"peor": "worse"}, {"superior": "upper/superior"}, {"inferior": "lower/inferior"}, {"mayor": "older/greater"},
+  {"menor": "younger/lesser"}, {"mucho": "much/many"}, {"poco": "little/few"}, {"alguno": "some"}, {"ninguno": "none"},
+  {"todo": "all/every"}, {"cada": "each"}, {"varios": "several"}, {"cierto": "certain"}, {"diferente": "different"},
+  {"mismo": "same"}, {"único": "only/unique"}, {"doble": "double"}, {"simple": "simple"},
+  // Colors
+  {"color": "color"}, {"rojo": "red"}, {"verde": "green"}, {"azul": "blue"}, {"amarillo": "yellow"}, {"blanco": "white"},
+  {"negro": "black"}, {"gris": "gray"}, {"marrón": "brown"}, {"rosa": "pink"}, {"naranja": "orange"}, {"morado": "purple"},
+  // Character & Condition
+  {"nuevo": "new"}, {"viejo": "old"}, {"joven": "young"}, {"fácil": "easy"}, {"difícil": "difficult"}, {"posible": "possible"},
+  {"imposible": "impossibe"}, {"importante": "important"}, {"necesario": "necessary"}, {"libre": "free"}, {"ocupado": "busy"},
+  {"listo": "ready/clever"}, {"feliz": "happy"}, {"triste": "sad"}, {"contento": "glad/content"}, {"enfermo": "sick"},
+  {"sano": "healthy"}, {"limpio": "clean"}, {"sucio": "dirty"}, {"caliente": "hot"}, {"frío": "cold"}, {"caluroso": "hot (weather)"},
+  {"fresco": "cool/fresh"}, {"duro": "hard"}, {"blando": "soft"}, {"pesado": "heavy"}, {"ligero": "light"}, {"rápido": "fast"},
+  {"lento": "slow"}, {"fuertes": "strong"}, {"débil": "weak"}, {"rico": "rich/delicious"}, {"pobre": "poor"}, {"caro": "expensive"},
+  {"barato": "cheap"}, {"lleno": "full"}, {"vacío": "empty"}, {"abierto": "open"}, {"cerrado": "closed"},
+  // Adverbs & Place Words
+  {"muy": "very"}, {"más": "more"}, {"menos": "less"}, {"bastante": "quite/enough"}, {"demasiado": "too much"},
+  {"tan": "so"}, {"tanto": "so much"}, {"casi": "almost"}, {"solo": "only/alone"}, {"incluso": "even"}, {"aún": "still/yet"},
+  {"ya": "already/now"}, {"siempre": "always"}, {"nunca": "never"}, {"jamás": "never (emphatic)"}, {"también": "also"},
+  {"tampoco": "neither"}, {"aquí": "here"}, {"acá": "here (LatAm)"}, {"ahí": "there (near)"}, {"allí": "there"},
+  {"allá": "over there"}, {"cerca": "near"}, {"lejos": "far"}, {"dentro": "inside"}, {"fuera": "outside"},
+  {"arriba": "up/above"}, {"abajo": "down/below"}, {"adelante": "forward/ahead"}, {"atrás": "back/behind"},
+  {"enfrente": "in front"}, {"alrededor": "around"}, {"ahora": "now"}, {"antes": "before"}, {"después": "after"},
+  {"pronto": "soon"}, {"tarde": "late"}, {"temprano": "early"}, {"ayer": "yesterday"}, {"hoy": "today"}, {"mañana": "tomorrow"},
+  {"ya": "already"}, {"todavía": "still"}, {"recién": "recently (LatAm)"}, {"bien": "well"}, {"mal": "badly"},
+  {"así": "like this/so"}, {"despacio": "slowly"}, {"rápidamente": "quickly"}, {"claro": "clearly/of course"},
+  {"quizás": "perhaps"}, {"tal vez": "perhaps"}, {"probablemente": "probably"}, {"seguramente": "surely"},
+  {"realmente": "really"}, {"solamente": "only"}, {"especialmente": "especially"}, {"finalmente": "finally"},
+  {"generalmente": "generally"}, {"normalmente": "normally"}, {"usualmente": "usually"}, {"frecuentemente": "frequently"}
+];
+
+// To access it, you can now use: spanishWords1500
 
         const grammarBank = [
           {
