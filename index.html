@@ -226,7 +226,7 @@
 
     <script>
         // Placeholder list - REPLACE THIS with your full 1000 word list
-       const fullWordList = [
+        const rawWordList = [
   // === 1. ARTICLES, PRONOUNS & DETERMINERS (1-120) ===
   {"el": "the (masculine singular)"}, {"la": "the (feminine singular)"}, {"los": "the (masculine plural)"}, {"las": "the (feminine plural)"},
   {"un": "a/an (masculine)"}, {"una": "a/an (feminine)"}, {"unos": "some (masc. pl.)"}, {"unas": "some (fem. pl.)"},
@@ -656,72 +656,91 @@
   {"realmente": "really"}, {"verdaderamente": "truly"}
 ];
 
-// To access it, you can now use: spanishWords1500
+
+        const fullWordList = rawWordList.map(obj => {
+            const key = Object.keys(obj)[0];
+            return { es: key, en: obj[key] };
+        });
 
         const grammarBank = [
-          {
-            id: 'g_gender_el',
-            type: 'grammar',
-            promptEs: 'Article + noun: ___ problema (choose el/la)',
-            acceptable: ['el'],
-            topic: 'Gender'
-          },
-          {
-            id: 'g_gender_la',
-            type: 'grammar',
-            promptEs: 'Article + noun: ___ casa (choose el/la)',
-            acceptable: ['la'],
-            topic: 'Gender'
-          },
-          {
-            id: 'g_plural_s',
-            type: 'grammar',
-            promptEs: 'Make plural: "gato" ->',
-            acceptable: ['gatos'],
-            topic: 'Pluralization'
-          },
-          {
-            id: 'g_subj_pron',
-            type: 'grammar',
-            promptEs: 'Translate "We" (masculine) ->',
-            acceptable: ['nosotros'],
-            topic: 'Pronouns'
-          },
-          {
-            id: 'g_ser_estar',
-            type: 'grammar',
-            promptEs: 'Complete: "Yo ___ feliz" (I am happy right now) ->',
-            acceptable: ['estoy'],
-            topic: 'Ser vs Estar'
-          },
-          {
-            id: 'g_pres_ar',
-            type: 'grammar',
-            promptEs: 'Conjugate: hablar (yo, presente) ->',
-            acceptable: ['hablo'],
-            topic: 'Present Tense'
-          },
-          {
-            id: 'g_subj_nos',
-            type: 'grammar',
-            promptEs: 'Conjugate: hablar (nosotros, presente subjuntivo)',
-            acceptable: ['hablemos'],
-            topic: 'Subjunctive'
-          },
-          {
-            id: 'g_pret_irreg',
-            type: 'grammar',
-            promptEs: 'Preterite of “tener” (ellos)',
-            acceptable: ['tuvieron'],
-            topic: 'Preterite irregulars'
-          },
-          {
-            id: 'g_clitic',
-            type: 'grammar',
-            promptEs: 'Order the words: “dáselo” → me, los',
-            acceptable: ['dámelos', 'dámelos.'],
-            topic: 'Clitic doubling'
-          }
+            // 1. Pronunciation
+            { id: 'g_silent_h', type: 'grammar', promptEs: 'Which letter is silent in "hola"?', acceptable: ['h'], topic: 'Pronunciation' },
+            { id: 'g_ll_sound', type: 'grammar', promptEs: 'The "ll" in "llamar" sounds like which English letter? (y/j/w)', acceptable: ['y'], topic: 'Pronunciation' },
+
+            // 2. Nouns & Articles
+            { id: 'g_art_fem', type: 'grammar', promptEs: 'Definite article for "mesa" (el/la)', acceptable: ['la'], topic: 'Articles' },
+            { id: 'g_art_masc', type: 'grammar', promptEs: 'Definite article for "libro" (el/la)', acceptable: ['el'], topic: 'Articles' },
+            { id: 'g_art_agua', type: 'grammar', promptEs: 'Definite article for "agua" (el/la)', acceptable: ['el'], topic: 'Articles' },
+            { id: 'g_art_mano', type: 'grammar', promptEs: 'Definite article for "mano" (el/la)', acceptable: ['la'], topic: 'Articles' },
+            { id: 'g_art_prob', type: 'grammar', promptEs: 'Definite article for "problema" (el/la)', acceptable: ['el'], topic: 'Articles' },
+            { id: 'g_plur_vowel', type: 'grammar', promptEs: 'Plural of "casa"', acceptable: ['casas'], topic: 'Pluralization' },
+            { id: 'g_plur_cons', type: 'grammar', promptEs: 'Plural of "papel"', acceptable: ['papeles'], topic: 'Pluralization' },
+
+            // 3. Adjectives
+            { id: 'g_adj_agree', type: 'grammar', promptEs: 'casas ___ (blanco/blanca/blancos/blancas)', acceptable: ['blancas'], topic: 'Adjectives' },
+
+            // 4. Subject Pronouns
+            { id: 'g_pron_we_m', type: 'grammar', promptEs: 'Translate "We" (masculine)', acceptable: ['nosotros'], topic: 'Pronouns' },
+            { id: 'g_pron_they_f', type: 'grammar', promptEs: 'Translate "They" (feminine)', acceptable: ['ellas'], topic: 'Pronouns' },
+
+            // 5. Conjugation (Present)
+            { id: 'g_pres_ar_yo', type: 'grammar', promptEs: 'Conjugate: hablar (yo)', acceptable: ['hablo'], topic: 'Present Tense' },
+            { id: 'g_pres_er_tu', type: 'grammar', promptEs: 'Conjugate: comer (tú)', acceptable: ['comes'], topic: 'Present Tense' },
+            { id: 'g_pres_ir_nos', type: 'grammar', promptEs: 'Conjugate: vivir (nosotros)', acceptable: ['vivimos'], topic: 'Present Tense' },
+            { id: 'g_irr_ser_yo', type: 'grammar', promptEs: 'Conjugate: ser (yo)', acceptable: ['soy'], topic: 'Irregular Verbs' },
+            { id: 'g_irr_estar_tu', type: 'grammar', promptEs: 'Conjugate: estar (tú)', acceptable: ['estás', 'estas'], topic: 'Irregular Verbs' },
+            { id: 'g_irr_ir_yo', type: 'grammar', promptEs: 'Conjugate: ir (yo)', acceptable: ['voy'], topic: 'Irregular Verbs' },
+            { id: 'g_irr_tener_yo', type: 'grammar', promptEs: 'Conjugate: tener (yo)', acceptable: ['tengo'], topic: 'Irregular Verbs' },
+
+            // 6. Tenses
+            { id: 'g_prog_ando', type: 'grammar', promptEs: 'Walking: camin___ (suffix)', acceptable: ['ando'], topic: 'Present Progressive' },
+            { id: 'g_fut_voy', type: 'grammar', promptEs: 'I am going to eat: ___ a comer', acceptable: ['voy'], topic: 'Near Future' },
+
+            // 7. Ser vs Estar
+            { id: 'g_ser_prof', type: 'grammar', promptEs: '___ médico (Soy/Estoy)', acceptable: ['soy'], topic: 'Ser vs Estar' },
+            { id: 'g_est_loc', type: 'grammar', promptEs: '___ en casa (Soy/Estoy)', acceptable: ['estoy'], topic: 'Ser vs Estar' },
+
+            // 8. Question Words
+            { id: 'g_qw_who', type: 'grammar', promptEs: 'Translate "Who"', acceptable: ['quién', 'quien'], topic: 'Question Words' },
+            { id: 'g_qw_where', type: 'grammar', promptEs: 'Translate "Where"', acceptable: ['dónde', 'donde'], topic: 'Question Words' },
+
+            // 9. Prepositions
+            { id: 'g_prep_with', type: 'grammar', promptEs: 'Translate "With"', acceptable: ['con'], topic: 'Prepositions' },
+            { id: 'g_prep_without', type: 'grammar', promptEs: 'Translate "Without"', acceptable: ['sin'], topic: 'Prepositions' },
+
+            // 10. Numbers/Time
+            { id: 'g_num_100', type: 'grammar', promptEs: 'Number 100', acceptable: ['cien'], topic: 'Numbers' },
+            { id: 'g_time_1', type: 'grammar', promptEs: '___ la una (Es/Son)', acceptable: ['es'], topic: 'Time' },
+            { id: 'g_time_2', type: 'grammar', promptEs: '___ las dos (Es/Son)', acceptable: ['son'], topic: 'Time' },
+
+            // 11. Possession
+            { id: 'g_poss_mi', type: 'grammar', promptEs: '___ casa (My)', acceptable: ['mi'], topic: 'Possession' },
+            
+            // 12. Demonstratives
+            { id: 'g_demo_this', type: 'grammar', promptEs: 'Translate "This" (masculine)', acceptable: ['este'], topic: 'Demonstratives' },
+
+            // 13. Object Pronouns
+            { id: 'g_obj_lo', type: 'grammar', promptEs: 'I see him/it: ___ veo', acceptable: ['lo'], topic: 'Object Pronouns' },
+            
+            // 14. Gustar
+            { id: 'g_gust_pl', type: 'grammar', promptEs: 'Me ___ los libros (gusta/gustan)', acceptable: ['gustan'], topic: 'Gustar' },
+
+            // 15. Weather
+            { id: 'g_weath_hace', type: 'grammar', promptEs: '___ calor (Hace/Esta)', acceptable: ['hace'], topic: 'Weather' },
+
+            // 16. Phrases
+            { id: 'g_phr_name', type: 'grammar', promptEs: 'Me ___ Juan (call/name)', acceptable: ['llamo'], topic: 'Phrases' },
+            { id: 'g_polite_plz', type: 'grammar', promptEs: 'Translate "Please"', acceptable: ['por favor'], topic: 'Phrases' },
+
+            // 17. Word Order
+            { id: 'g_neg_no', type: 'grammar', promptEs: 'I don\'t have money: ___ tengo dinero', acceptable: ['no'], topic: 'Negation' },
+
+            // 18. Contractions
+            { id: 'g_contr_al', type: 'grammar', promptEs: 'a + el = ___', acceptable: ['al'], topic: 'Contractions' },
+            { id: 'g_contr_del', type: 'grammar', promptEs: 'de + el = ___', acceptable: ['del'], topic: 'Contractions' },
+
+            // 19. Comparatives
+            { id: 'g_comp_que', type: 'grammar', promptEs: 'Más ... ___ (than)', acceptable: ['que'], topic: 'Comparatives' }
         ];
 
         // State
