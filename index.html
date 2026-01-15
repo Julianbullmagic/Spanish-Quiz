@@ -227,6 +227,12 @@
     <script>
         // Placeholder list - REPLACE THIS with your full 1000 word list
         const rawWordList = [
+  // === USER CUSTOM ===
+  {"Me llamo": ["My name is", "I call myself"]},
+  {"encantada": ["enchanted", "delighted"]},
+  {"¿Cómo te llamas?": ["What is your name?", "What's your name?"]},
+  {"Muy bien": ["Very good", "Very well"]},
+
   // === 1. ARTICLES, PRONOUNS & DETERMINERS (1-120) ===
   {"el": "the (masculine singular)"}, {"la": "the (feminine singular)"}, {"los": "the (masculine plural)"}, {"las": "the (feminine plural)"},
   {"un": "a/an (masculine)"}, {"una": "a/an (feminine)"}, {"unos": "some (masc. pl.)"}, {"unas": "some (fem. pl.)"},
@@ -890,12 +896,39 @@
             } else {
                 const mode = Math.random() < 0.5 ? 'toEN' : 'toES';
                 
+                const qRaw = mode === 'toEN' ? wordObj.es : wordObj.en;
+                const aRaw = mode === 'toEN' ? wordObj.en : wordObj.es;
+
+                const formatDisplay = (val) => Array.isArray(val) ? val.join(' / ') : val;
+
+                const parseAcceptable = (val) => {
+                    const list = Array.isArray(val) ? val : [val];
+                    let final = [];
+                    list.forEach(s => {
+                        // Handle potential non-strings just in case, though data is strings
+                        const str = String(s);
+                        // Split by slash
+                        const parts = str.split('/');
+                        parts.forEach(p => {
+                            const trimmed = p.trim();
+                            if (trimmed) {
+                                final.push(trimmed);
+                                // Also allow version without parentheses
+                                if (trimmed.includes('(')) {
+                                    final.push(trimmed.replace(/\s*\(.*?\)/g, '').trim());
+                                }
+                            }
+                        });
+                    });
+                    return [...new Set(final)];
+                };
+
                 currentCard = {
                     wordObj: wordObj,
                     mode: mode,
-                    question: mode === 'toEN' ? wordObj.es : wordObj.en,
-                    answer: mode === 'toEN' ? wordObj.en : wordObj.es,
-                    acceptable: [mode === 'toEN' ? wordObj.en : wordObj.es]
+                    question: formatDisplay(qRaw),
+                    answer: formatDisplay(aRaw),
+                    acceptable: parseAcceptable(aRaw)
                 };
 
                 questionWordEl.textContent = currentCard.question;
